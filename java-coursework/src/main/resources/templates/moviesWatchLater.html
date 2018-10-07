@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:include="base :: head"></div>
+
+    <meta charset="UTF-8"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Watch later</title>
+</head>
+<body>
+<script th:inline="javascript">
+    var token = $('#_csrf').attr('content');
+    var header = $('#_csrf_header').attr('content');
+
+    function add_something(endpoint, parameters) {
+        $.ajax({
+            type: "POST",
+            url: "/" + endpoint,
+            data: jQuery.param({id: Number(parameters.id)}),
+            success: function (data, textStatus, jqXHR) {
+            },
+            error: function (request, status, error) {
+                alert("You should login first");
+                window.location.replace("/registration");
+            }
+        });
+    }
+
+</script>
+<nav th:replace="navbar :: navbar (genres=${genres})"></nav>
+
+<div th:replace="cards :: cards (moviesByField=${moviesWatchLater})"></div>
+
+</body>
+</html>

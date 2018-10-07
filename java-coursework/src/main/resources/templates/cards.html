@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div th:fragment="cards (moviesByField)">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-md-4" th:each="movie : ${moviesByField}">
+                <div class="card">
+                    <img class="card-img-top"
+                         th:src="${(movie.getImage() != null ? movie.getImage() : '/images/default.png')}"
+                         alt="Image not found"/>
+                    <div class="card-header" th:text="${movie.getTitle()}"></div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Rating: <span class="badge badge-warning rating"
+                                                                  th:text="${movie.getRating()}"></span></li>
+                        <li class="list-group-item">Genre: <span class="badge badge-primary genre"
+                                                                 th:text="${movie.getGenre()}"></span></li>
+                    </ul>
+                    <div class="card-footer">
+                        <a href="#" role="button"
+                           data-th-id="${movie.getId()}"
+                           class="btn btn-outline-info btn-block add-to-watch-later"
+                           onclick="add_something('addToWatchLater', this)">
+                            <i class="far fa-clock"></i> Watch later</a>
+                        <a href="#" role="button"
+                           data-th-id="${movie.getId()}"
+                           class="btn btn-outline-warning btn-block add-to-favorites"
+                           onclick="add_something('addToFavorites', this)">
+                            <i class="fa fa-plus"></i> Add to favorites</a>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/movie/__${movie.getId()}__}" role="button"
+                           data-th-id="${movie.getId()}"
+                           class="btn btn-outline-dark btn-block">
+                            More details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:include="base :: head"></div>
+
+    <meta charset="UTF-8"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/detail_view.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title th:text="${movie.getTitle()}"></title>
+</head>
+<body>
+
+<script th:inline="javascript">
+    var token = $('#_csrf').attr('content');
+    var header = $('#_csrf_header').attr('content');
+
+    function add_something(endpoint, parameters) {
+        $.ajax({
+            type: "POST",
+            url: "/" + endpoint,
+            data: jQuery.param({id: Number(parameters.id)}),
+            success: function (data, textStatus, jqXHR) {
+            },
+            error: function (request, status, error) {
+                alert("You should login first");
+                window.location.replace("/registration");
+            }
+        });
+    }
+
+</script>
+
+<nav th:replace="navbar :: navbar (genres=${genres})"></nav>
+
+<div class="container">
+    <div class="row">
+        <div class="card-deck mx-auto">
+
+            <div class="card" id="card-image">
+                <img class="card-img-top"
+                     th:src="${(movie.getImage() != null ? movie.getImage() : '/images/default.png')}"
+                     alt="Image not found"/>
+            </div>
+
+            <div class="card" id="card-info">
+                <div class="card-header" th:text="${movie.getTitle()}"></div>
+                <div class="card-body">
+                    <p class="card-text" th:text="${movie.getDescription()}"></p>
+                </div>
+                <ul class="list-group">
+                    <div class="d-flex justify-content-between">
+                        <li class="list-group-item bg-info btn-block">Budget (USD)</li>
+                        <li class="list-group-item btn-block" th:text="${movie.getBudget()}"></li>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <li class="list-group-item bg-info btn-block">Durability (min)</li>
+                        <li class="list-group-item btn-block" th:text="${movie.getDurability()}"></li>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <li class="list-group-item bg-info btn-block">Released year</li>
+                        <li class="list-group-item btn-block" th:text="${movie.getYear()}"></li>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <li class="list-group-item bg-info btn-block">Genre</li>
+                        <li class="list-group-item btn-block" th:text="${movie.getGenre()}"></li>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <li class="list-group-item bg-info btn-block">Rating</li>
+                        <li class="list-group-item btn-block" th:text="${movie.getRating()}"></li>
+                    </div>
+                </ul>
+                <div class="card-footer">
+                    <a href="#" role="button"
+                       th:id="${movie.getId()}"
+                       class="btn btn-outline-info btn-block add-to-watch-later" onclick="add_something('addToWatchLater', this)">
+                        <i class="far fa-clock"></i> Watch later</a>
+                    <a href="#" role="button"
+                       th:id="${movie.getId()}"
+                       class="btn btn-outline-warning btn-block add-to-favorites"
+                       onclick="add_something('addToFavorites', this)">
+                        <i class="fa fa-plus"></i> Add to favorites</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

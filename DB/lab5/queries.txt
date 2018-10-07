@@ -1,0 +1,154 @@
+db.artists.aggregate([
+    {
+      $lookup:
+        {
+          from: "musicians",
+          localField: "_id",
+          foreignField: "artist_id",
+          as: "band_members"
+        }
+   },
+   { $match : { artistname : "Rush" } }
+]).pretty()
+
+
+-- TASK TWO
+
+-- count documents
+db.stuff_data.aggregate([
+  {
+    $group : {
+      _id: null,
+      count: {$sum: 1}
+    }
+  },
+])
+
+-- group by surname and count ids (push them to the list)
+db.stuff_data.aggregate([
+  {
+    $group : {
+     _id: "$surname",
+     ids: {$push: "$_id"}
+    }
+  },
+  {
+    $sort : {
+      _id: -1
+    }
+  }
+])
+
+-- join to trailer_park_data by id
+db.repairs_data.aggregate([
+  {
+    $lookup:
+      {
+        from: "trailers_park_data",
+        localField: "auto_num_id",
+        foreignField: "_id",
+        as: "auto_num_id"
+      }
+  },
+  {
+    $project:
+      {
+        "_id": "$_id",
+        "repair_date": "$rdate",
+        "auto_brand": "$auto_num_id.auto_brand",
+        "auto_num": "$auto_num_id.auto_num",
+        "repairs": "$types_code"
+      }
+  },
+  {$unwind: "$auto_brand"},
+  {$unwind: "$auto_num"},
+  {
+    $sort: { "auto_brand": 1 }
+  }
+])
+
+
+-- output mechanic and car. Print out also if car was cleaned. Count total salary and split on categories
+db.repairs_data.aggregate([
+  {
+    $lookup: {
+      from: "trailers_park_data",
+      localField: "auto_num_id",
+      foreignField: "_id",
+      as: "auto_num_id"
+    }
+  },
+  {
+    $lookup: {
+      from: "stuff_data",
+      localField: "mechanic_id",
+      foreignField: "_id",
+      as: "mechanic_id"
+    }
+  },
+  {
+    $project: {
+      "mechanic": "$mechanic_id.surname",
+      "salary": "$mechanic_id.salary",
+      "car": "$auto_num_id.auto_brand",
+      "was_fully_cleaned": {
+        $in : ["Full cleaning", "$types_code"]
+      }
+    }
+  },
+  {$unwind: "$mechanic"},
+  {$unwind: "$car"},
+  {$unwind: "$salary"},
+  {
+    $bucket:  {
+      groupBy: "$salary",
+      boundaries: [0, 5000, 10000, 20000],
+      default: "Other",
+      output: {
+        "count": { $sum: 1 },
+        "mechanics": { $push: "$mechanic" },
+        "cars": { $push: "$car" },
+        "total_salary": { $sum: "$salary"}
+      }
+    }
+  }
+])
+
+
+-- TASK THREE
+----total salary per mechanic
+var mapFunction = function() {
+   emit(this._id, this.salary);
+};
+
+var reduceFunction = function(id, salary) {
+   return Array.sum(salary);
+};
+
+db.stuff_data.mapReduce(
+                   mapFunction,
+                   reduceFunction,
+                   { out: "map_reduce_result" }
+                 )
+
+-- one more query
+var mapFoo = function() {
+  emit(this._id, this.released_date);
+};
+
+var reduceFoo = function(id, date){
+  date_splitted = date.split('.');
+  var day, month, year;
+  day = date_splitted[0];
+  month = date_splitted[1];
+  year = date_splitted[2];
+
+  return (year > 50) ? year : null
+};
+
+
+db.trailers_park_data.mapReduce(
+                   mapFoo,
+                   reduceFoo,
+                   { out: "map_reduce_date" }
+                 )

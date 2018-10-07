@@ -1,0 +1,2 @@
+CREATE USER admin WITH SUPERUSER PASSWORD 'admin';
+CREATE DATABASE movie_website OWNER admin;

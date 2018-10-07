@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:include="base :: head"></div>
+
+    <meta charset="UTF-8"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title th:text="${#strings.capitalize(genre)}"></title>
+</head>
+<body>
+<script th:inline="javascript">
+    var token = $('#_csrf').attr('content');
+    var header = $('#_csrf_header').attr('content');
+
+    function add_something(endpoint, parameters) {
+        $.ajax({
+            type: "POST",
+            url: "/" + endpoint,
+            data: jQuery.param({id: Number(parameters.id)}),
+            success: function (data, textStatus, jqXHR) {
+            },
+            error: function (request, status, error) {
+                alert("You should login first");
+                window.location.replace("/registration");
+            }
+        });
+    }
+</script>
+<nav th:replace="navbar :: navbar (genres=${genres})"></nav>
+
+<div th:replace="cards :: cards (moviesByField=${moviesByField})"></div>
+
+<div class="container">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <span class="page-link" aria-hidden="true">Previous</span>
+        </li>
+        <th:block th:each="counter : ${#numbers.sequence(0, totalMovies)}">
+            <li class="page-item" th:classappend="${currentPage == counter} ? active">
+                <a class="page-link"
+                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                   th:href="${urlBuilder.replaceQueryParam('page', counter).toUriString()}"
+                   th:text="${counter + 1}">
+                </a>
+            </li>
+        </th:block>
+        <li class="page-item">
+            <span class="page-link" aria-hidden="true">Next</span>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

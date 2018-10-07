@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="labwork2" default="all">
+    <target name="make.dirs" description="Make some dir">
+        <mkdir dir="build"/>
+        <mkdir dir="build/class"/>
+        <mkdir dir="docs_ant"/>
+    </target>
+
+    <target name="compile" description="compile java"  depends="make.dirs">
+        <javac destdir="build/class">
+            <src path="src"/>
+        </javac>
+    </target>
+
+    <target name="all" description="Do the entire build" depends="docs_ant" >
+        <echo>Building project</echo>
+    </target>
+
+    <target name="clean" description="Cleaning up">
+        <echo>Cleaning up</echo>
+        <delete dir="build"/>
+        <delete dir="docs_ant"/>
+    </target>
+
+    <target name = "docs_ant" description="Generate javadoc" depends="compile">
+        <echo>Generating javadoc</echo>
+        <javadoc sourcepath="src" destdir = "docs_ant" version = "true">
+            <fileset dir="src"/>
+        </javadoc>
+
+        <echo>JavaDoc has been generated!</echo>
+    </target>
+</project>

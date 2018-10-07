@@ -1,0 +1,23 @@
+language: java
+env:
+  global:
+    - DOCKER_IMAGE_HOST=alexanderonbysh
+    - IMAGE_NAME=movie-website
+
+services:
+  - postgresql
+  - docker
+
+before_script:
+  - psql -c "CREATE DATABASE movie_website;" -U postgres
+  - psql -c "CREATE USER admin WITH PASSWORD 'admin';" -U postgres
+
+sudo: enabled
+jdk:
+- oraclejdk8
+
+after_success:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$BRANCH .
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  - docker push $DOCKER_IMAGE_HOST/$IMAGE_NAME:$BRANCH
