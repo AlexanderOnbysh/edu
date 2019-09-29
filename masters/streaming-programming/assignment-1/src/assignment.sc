@@ -67,7 +67,7 @@ def factorial(n: Int): Int = n match {
   case _ => n * factorial(n - 1)
 }
 
-def factorial_tail(n: Int): Int = {
+def factorialTail(n: Int): Int = {
   @tailrec
   def factorial_with_acc(n: Int, acc: Int): Int = n match {
     case 1 => acc
@@ -78,7 +78,7 @@ def factorial_tail(n: Int): Int = {
 }
 
 factorial(5)
-factorial_tail(5)
+factorialTail(5)
 
 /*
  Problem 6
@@ -91,7 +91,7 @@ def fib(n: Int): Int = n match {
   case _ => fib(n - 1) + fib(n - 2)
 }
 
-def fib_tail(n: Int): Int = {
+def fibTail(n: Int): Int = {
   @tailrec
   def fib_inner(a1: Int, a2: Int, n: Int): Int = n match {
     case 3 => a1 + a2
@@ -105,7 +105,7 @@ def fib_tail(n: Int): Int = {
 }
 
 fib(10)
-fib_tail(10)
+fibTail(10)
 
 /*
  Problem 7
@@ -125,8 +125,8 @@ def pascal(height: Int,
            state: List[List[Int]] = List(List(0, 1, 0))
           ): List[List[Int]] = {
   @tailrec
-  def pascal_inner(l: List[Int], state: List[Int]): List[Int] = l match {
-    case a :: b :: tail => pascal_inner(b :: tail, a + b :: state)
+  def pascalInner(l: List[Int], state: List[Int]): List[Int] = l match {
+    case a :: b :: tail => pascalInner(b :: tail, a + b :: state)
     case _ => 0 :: state
   }
 
@@ -134,7 +134,7 @@ def pascal(height: Int,
 
   height match {
     case 1 => state
-    case _ => pascal(height - 1, pascal_inner(state.head, List(0)) :: state)
+    case _ => pascal(height - 1, pascalInner(state.head, List(0)) :: state)
   }
 }
 
@@ -163,96 +163,53 @@ pascal(100)
 */
 
 
+def priority(operator: String): Int = operator match {
+  case "+" => 1
+  case "*" => 2
+}
+
+def operate(op: String, a: Int, b: Int): Int = op match {
+  case "+" => a + b
+  case "*" => a * b
+}
+
+/** Shunting-yard algorithm */
+@tailrec
+def evalInner(l: List[String],
+              value_stack: List[Int],
+              operator_stack: List[String]): Int = {
+  l match {
+    case operator :: l_tail if operator.matches("[\\*\\+]") =>
+      operator_stack match {
+        case Nil => evalInner(l_tail, value_stack, operator :: operator_stack)
+        case op :: op_tail if priority(operator) > priority(op) => evalInner(l_tail, value_stack, operator :: op :: op_tail)
+        case op :: op_tail if priority(operator) <= priority(op) =>
+          value_stack match {
+            case a :: b :: v_tail => evalInner(l, operate(op, a, b) :: v_tail, op_tail)
+            case Nil => evalInner(l_tail, value_stack, operator :: operator_stack)
+            case _ :: _ => throw new Exception(s"Two sequential operators: ${op.toString} ${operator.toString}")
+          }
+      }
+    case number :: tail if number.matches("[0-9]+") => evalInner(tail, number.toInt :: value_stack, operator_stack)
+    case Nil =>
+      value_stack match {
+        case Nil => 0
+        case value :: Nil => value
+        case a :: b :: v_tail => operator_stack match {
+          case op :: op_tail => evalInner(List(), operate(op, a, b) :: v_tail, op_tail)
+          case _ => throw new Exception("Not enough operators")
+        }
+      }
+  }
+}
+
 def eval(l: List[String]): Int = {
-  l match {
-    case a :: Nil => a.toInt
-    case a :: "+" :: tail => a.toInt + eval(tail)
-    case a :: "*" :: b :: "*" :: tail => a.toInt * b.toInt * eval(tail)
-    case a :: "*" :: b :: "+" :: tail => a.toInt * b.toInt + eval(tail)
-    case a :: "*" :: b :: tail => a.toInt * b.toInt + eval(tail)
-    case Nil => 0
-    case _ => -1
-  }
+  evalInner(l, List(), List())
 }
 
 
-eval(List("1", "+", "2", "+", "4"))
-eval(List("2", "*", "2"))
-eval(List("2", "*", "2", "*", "3", "+", "10"))
-eval(List())
-
-
-//def​ ​eval​(​l​: ​List​[​String​])​:​ ​Int​ ​=​ ​???
-//assert(eval(​List​(​"1"​, ​"+"​, ​"2"​, ​"*"​, ​"3"​)) ​==​ ​7​)
-//assert(eval(​List​(​"5"​, ​"*"​, ​"3"​, ​"+"​, ​"1"​)) ​==​ ​16​)
-
-
-def eval3(l: List[String], prev: Int): Int = {
-  l match {
-    case "+" :: tail => prev + eval3(tail, 0)
-    case "*" :: tail => prev * eval3(tail, 0)
-    case a :: tail => eval3(tail, a.toInt)
-    case Nil => 1
-  }
-}
-
-eval3(List("1", "+", "2", "*", "4"), 0)
-
-
-def eval4(l: List[String], clean: List[Int]): List[Int] = {
-  l match {
-    case a :: "+" :: tail => eval4(tail, a :: clean)
-    case a :: "*" :: tail =>
-  }
-}
-
-
-def eval5(l: List[String], prev: Int): Int = l match {
-  case "*" :: a :: tail => eval5(tail, a.toInt * prev)
-  case "+" :: tail => prev.toInt + eval5(tail, 1)
-  case a :: tail => 1
-}
-
-/*
-ta
-
-1 + 2 * 4
-
-1 + eval(2 * 4)
-1 + 2 * eval(4)
-1 + 2 * 4 <-
-
-1 * 2 + 3 * 4
-
-1
-prev 1
-* 2
-prev 1 * 2
-+
-
-
-
-
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+assert(eval(List("1")) == 1)
+assert(eval(List("1", "+", "1", "+", "3")) == 5)
+assert(eval(List("1", "*", "2", "*", "3")) == 6)
+assert(eval(List("1", "+", "1", "*", "10")) == 11)
+assert(eval(List("2", "*", "3", "+", "10", "*", "2")) == 26)
