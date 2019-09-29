@@ -69,12 +69,12 @@ def factorial(n: Int): Int = n match {
 
 def factorialTail(n: Int): Int = {
   @tailrec
-  def factorial_with_acc(n: Int, acc: Int): Int = n match {
+  def accFactorial(n: Int, acc: Int): Int = n match {
     case 1 => acc
-    case _ => factorial_with_acc(n - 1, n * acc)
+    case _ => accFactorial(n - 1, n * acc)
   }
 
-  factorial_with_acc(n, 1)
+  accFactorial(n, 1)
 }
 
 factorial(5)
@@ -93,14 +93,14 @@ def fib(n: Int): Int = n match {
 
 def fibTail(n: Int): Int = {
   @tailrec
-  def fib_inner(a1: Int, a2: Int, n: Int): Int = n match {
+  def fibInner(a1: Int, a2: Int, n: Int): Int = n match {
     case 3 => a1 + a2
-    case _ => fib_inner(a2, a1 + a2, n - 1)
+    case _ => fibInner(a2, a1 + a2, n - 1)
   }
 
   n match {
     case 1 | 2 => 1
-    case _ => fib_inner(1, 1, n)
+    case _ => fibInner(1, 1, n)
   }
 }
 
@@ -139,7 +139,7 @@ def pascal(height: Int,
 }
 
 
-pascal(100)
+pascal(10)
 
 /*
  Problem 8
@@ -182,32 +182,31 @@ def eval(l: List[String]): Int = {
   @tailrec
   def evalInner(l: List[String],
                 valueStack: List[Int],
-                operatorStack: List[String]): Int = {
-    l match {
-      case operator :: lTail if operator.matches(operatorRegex) =>
-        operatorStack match {
-          case Nil => evalInner(lTail, valueStack, operator :: operatorStack)
-          case op :: opTail =>
-            if (priority(operator) <= priority(op)) {
-              valueStack match {
-                case Nil => evalInner(lTail, valueStack, operator :: operatorStack)
-                case a :: b :: vTail => evalInner(l, operate(op, a, b) :: vTail, opTail)
-                case _ :: _ => throw new Exception(s"Two sequential operators: ${op.toString} ${operator.toString}")
-              }
-            }
-            else evalInner(lTail, valueStack, operator :: op :: opTail)
-        }
-      case number :: tail if number.matches(numberRegex) => evalInner(tail, number.toInt :: valueStack, operatorStack)
-      case Nil =>
-        valueStack match {
-          case Nil => 0
-          case value :: Nil => value
-          case a :: b :: vTail => operatorStack match {
-            case op :: opTail => evalInner(List(), operate(op, a, b) :: vTail, opTail)
-            case _ => throw new Exception("Two sequential numbers")
+                operatorStack: List[String]): Int = l match {
+    case operator :: lTail if operator.matches(operatorRegex) =>
+      operatorStack match {
+        case Nil => evalInner(lTail, valueStack, operator :: operatorStack)
+        case op :: opTail =>
+          if (priority(operator) > priority(op))
+            evalInner(lTail, valueStack, operator :: op :: opTail)
+          else valueStack match {
+            case Nil => evalInner(lTail, valueStack, operator :: operatorStack)
+            case v1 :: v2 :: vTail => evalInner(l, operate(op, v1, v2) :: vTail, opTail)
+            case _ :: _ => throw new Exception(s"Two sequential operators: ${op.toString} ${operator.toString}")
           }
+      }
+
+    case number :: tail if number.matches(numberRegex) => evalInner(tail, number.toInt :: valueStack, operatorStack)
+
+    case Nil =>
+      valueStack match {
+        case Nil => 0
+        case value :: Nil => value
+        case v1 :: v2 :: vTail => operatorStack match {
+          case op :: opTail => evalInner(List(), operate(op, v1, v2) :: vTail, opTail)
+          case _ => throw new Exception("Two sequential numbers")
         }
-    }
+      }
   }
 
   evalInner(l, List(), List())
