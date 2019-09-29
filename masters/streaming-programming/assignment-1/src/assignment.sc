@@ -7,9 +7,9 @@ import scala.annotation.tailrec
 */
 
 def func1(a: Int, b: Int, c: Int): Int = {
-  if ((a < b) & (a < c)) return b * b + c * c
-  if ((b < a) & (b < c)) return a * a + c * c
-  a * a + b * b
+  if ((a < b) & (a < c)) b * b + c * c
+  else if ((b < a) & (b < c)) a * a + c * c
+  else a * a + b * b
 }
 
 assert(func1(1, 2, 3) == 13)
@@ -163,47 +163,53 @@ pascal(100)
 */
 
 
-def priority(operator: String): Int = operator match {
-  case "+" => 1
-  case "*" => 2
-}
-
-def operate(op: String, a: Int, b: Int): Int = op match {
-  case "+" => a + b
-  case "*" => a * b
-}
-
 /** Shunting-yard algorithm */
-@tailrec
-def evalInner(l: List[String],
-              value_stack: List[Int],
-              operator_stack: List[String]): Int = {
-  l match {
-    case operator :: l_tail if operator.matches("[\\*\\+]") =>
-      operator_stack match {
-        case Nil => evalInner(l_tail, value_stack, operator :: operator_stack)
-        case op :: op_tail if priority(operator) > priority(op) => evalInner(l_tail, value_stack, operator :: op :: op_tail)
-        case op :: op_tail if priority(operator) <= priority(op) =>
-          value_stack match {
-            case a :: b :: v_tail => evalInner(l, operate(op, a, b) :: v_tail, op_tail)
-            case Nil => evalInner(l_tail, value_stack, operator :: operator_stack)
-            case _ :: _ => throw new Exception(s"Two sequential operators: ${op.toString} ${operator.toString}")
-          }
-      }
-    case number :: tail if number.matches("[0-9]+") => evalInner(tail, number.toInt :: value_stack, operator_stack)
-    case Nil =>
-      value_stack match {
-        case Nil => 0
-        case value :: Nil => value
-        case a :: b :: v_tail => operator_stack match {
-          case op :: op_tail => evalInner(List(), operate(op, a, b) :: v_tail, op_tail)
-          case _ => throw new Exception("Not enough operators")
-        }
-      }
-  }
-}
-
 def eval(l: List[String]): Int = {
+
+  val operatorRegex = "[\\*\\+]"
+  val numberRegex = "[0-9]+"
+
+  def priority(operator: String): Int = operator match {
+    case "+" => 1
+    case "*" => 2
+  }
+
+  def operate(op: String, a: Int, b: Int): Int = op match {
+    case "+" => a + b
+    case "*" => a * b
+  }
+
+  @tailrec
+  def evalInner(l: List[String],
+                valueStack: List[Int],
+                operatorStack: List[String]): Int = {
+    l match {
+      case operator :: lTail if operator.matches(operatorRegex) =>
+        operatorStack match {
+          case Nil => evalInner(lTail, valueStack, operator :: operatorStack)
+          case op :: opTail =>
+            if (priority(operator) <= priority(op)) {
+              valueStack match {
+                case Nil => evalInner(lTail, valueStack, operator :: operatorStack)
+                case a :: b :: vTail => evalInner(l, operate(op, a, b) :: vTail, opTail)
+                case _ :: _ => throw new Exception(s"Two sequential operators: ${op.toString} ${operator.toString}")
+              }
+            }
+            else evalInner(lTail, valueStack, operator :: op :: opTail)
+        }
+      case number :: tail if number.matches(numberRegex) => evalInner(tail, number.toInt :: valueStack, operatorStack)
+      case Nil =>
+        valueStack match {
+          case Nil => 0
+          case value :: Nil => value
+          case a :: b :: vTail => operatorStack match {
+            case op :: opTail => evalInner(List(), operate(op, a, b) :: vTail, opTail)
+            case _ => throw new Exception("Two sequential numbers")
+          }
+        }
+    }
+  }
+
   evalInner(l, List(), List())
 }
 
