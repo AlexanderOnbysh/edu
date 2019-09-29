@@ -207,6 +207,8 @@ def eval(l: List[String]): Int = {
           case _ => throw new Exception("Two sequential numbers")
         }
       }
+
+    case unknown => throw new Exception(s"Unknown value ${unknown}")
   }
 
   evalInner(l, List(), List())
