@@ -1,9 +1,17 @@
+import scala.annotation.tailrec
 
 // Ex #3
 // Write a function to sum all integers between two given numbers a and b:
 // - use var
 // - rewrite using recursion
-def sumInts(a: Int, b: Int): Int = ???
+@tailrec
+def sumInts(a: Int, b: Int): Int = {
+  if (a > b) sumInts(b, a)
+  if (a == b) a
+  else sumInts(a + 1, b) + a
+}
+
+sumInts(0, 10)
 
 // Ex #4
 // Write a function to sum the squares of all integers
