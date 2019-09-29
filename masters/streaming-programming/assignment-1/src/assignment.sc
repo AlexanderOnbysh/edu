@@ -192,20 +192,18 @@ def eval(l: List[String]): Int = {
           else valueStack match {
             case Nil => evalInner(lTail, valueStack, operator :: operatorStack)
             case v1 :: v2 :: vTail => evalInner(l, operate(op, v1, v2) :: vTail, opTail)
-            case _ :: _ => throw new Exception(s"Two sequential operators: ${op.toString} ${operator.toString}")
+            case _ => throw new Exception(s"Two sequential operators: ${op.toString} ${operator.toString}")
           }
       }
 
     case number :: tail if number.matches(numberRegex) => evalInner(tail, number.toInt :: valueStack, operatorStack)
 
     case Nil =>
-      valueStack match {
-        case Nil => 0
-        case value :: Nil => value
-        case v1 :: v2 :: vTail => operatorStack match {
-          case op :: opTail => evalInner(List(), operate(op, v1, v2) :: vTail, opTail)
-          case _ => throw new Exception("Two sequential numbers")
-        }
+      (valueStack, operatorStack) match {
+        case (Nil, _) => 0
+        case (value :: Nil, _) => value
+        case (v1 :: v2 :: vTail, op :: opTail) => evalInner(Nil, operate(op, v1, v2) :: vTail, opTail)
+        case _ => throw new Exception("Two sequential numbers")
       }
 
     case unknown => throw new Exception(s"Unknown value ${unknown}")
