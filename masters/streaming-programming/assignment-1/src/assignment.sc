@@ -76,6 +76,23 @@ myif(1 == 1, () => println("One"), () => println("Two"))
  cube root of the given number.
 */
 
+def cubeRoot(a: Double,
+             criteria: (Double, Double) => Boolean = goodEnough()): Double = {
+
+  @tailrec
+  def cubeRootInner(a: Double, x1: Double): Double = {
+    val x2 = 1.0 / 3 * (2 * x1 + a / Math.pow(x1, 2))
+    if (criteria(x1, x2)) x2 else cubeRootInner(a, x2)
+  }
+
+  cubeRootInner(a, a)
+}
+
+assert(comp(cubeRoot(1), 1))
+assert(comp(cubeRoot(27), 3))
+assert(comp(cubeRoot(10), 2.154))
+
+
 /*
  Problem 5
  Write a function to compute the factorial of the given
