@@ -25,6 +25,26 @@ assert(func1(3, 2, 1) == 13)
  some difference.
 */
 
+def goodEnough(eps: Double = 1e-10) =
+  (a: Double, b: Double) => Math.abs(a - b) < eps
+
+
+def sqrt(a: Double,
+         criteria: (Double, Double) => Boolean = goodEnough()): Double = {
+
+  @tailrec
+  def sqrtInner(a: Double, x1: Double): Double = {
+    val x2 = 1.0 / 2 * (x1 + a / x1)
+    if (criteria(x1, x2)) x2 else sqrtInner(a, x2)
+  }
+
+  sqrtInner(a, a)
+}
+
+val comp = goodEnough(1e-3)
+assert(comp(sqrt(1), 1))
+assert(comp(sqrt(2), 1.414))
+assert(comp(sqrt(4), 2))
 
 /*
  Problem 3
@@ -130,20 +150,26 @@ def pascal(height: Int,
     case _ => 0 :: state
   }
 
-  println(state.head.toString())
-
   height match {
     case 1 => state
     case _ => pascal(height - 1, pascalInner(state.head, List(0)) :: state)
   }
 }
 
+def displayPascal(pascal: List[List[Int]]): Unit =
+  for (
+    (line, offset) <-
+      pascal.reverse zip (pascal.length to 1 by -1)
+  )
+    println(" " * offset + line.mkString(" ") + "\n")
 
-pascal(10)
+
+val p = pascal(10)
+displayPascal(p)
 
 /*
  Problem 8
- Write a function that tests a given number for primality.
+ Write a function that tests a given number for .
 */
 
 
