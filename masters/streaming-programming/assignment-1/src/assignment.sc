@@ -157,20 +157,25 @@ def pascal(height: Int,
 }
 
 def displayPascal(pascal: List[List[Int]]): Unit =
-  for (
-    (line, offset) <-
-      pascal.reverse zip (pascal.length to 1 by -1)
-  )
-    println(" " * offset + line.mkString(" ") + "\n")
+  for ((line, offset) <-
+         pascal.reverse zip (pascal.length to 1 by -1))
+    print(" " * offset + line.mkString(" ") + "\n")
 
 
-val p = pascal(10)
+val p = pascal(5)
 displayPascal(p)
 
 /*
  Problem 8
- Write a function that tests a given number for .
+ Write a function that tests a given number for primality.
 */
+def isPrime(n: Int): Boolean = (n > 1) && !(2 to sqrt(n).toInt).exists(x => n % x == 0)
+
+assert(isPrime(2))
+assert(isPrime(3))
+assert(!isPrime(4))
+assert(!isPrime(9))
+assert(isPrime(13))
 
 
 /*
