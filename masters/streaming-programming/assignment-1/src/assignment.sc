@@ -64,7 +64,7 @@ class If[A](predicate: => Boolean)(ThenBlock: => A) {
 
 /*
 Custom If statement could be implemented but identical implementation
-is not impossible (imho).
+is impossible (imho).
 Main differences between custom and native `if` statement:
  - custom if should be created by `new` since it's an object
  - custom if doesn't support tail recursion
