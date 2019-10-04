@@ -55,16 +55,36 @@ assert(comp(sqrt(4), 2))
  If not, try to explain why?
 */
 
-def myif(predicate: Boolean,
-         my_then: () => Unit,
-         my_else: () => Unit): Unit = predicate match {
-  case true => my_then()
-  case false => my_else()
+class If[A](predicate: => Boolean)(ThenBlock: => A) {
+  def Else(ElseBlock: => A): A = predicate match {
+    case true => ThenBlock
+    case false => ElseBlock
+  }
 }
 
+/*
+Custom If statement could be implemented but identical implementation
+is not impossible (imho).
+Main differences between custom and native `if` statement:
+ - custom if should be created by `new` since it's an object
+ - custom if doesn't support tail recursion
+   since recursive call not if the tail position
+*/
 
-myif(1 == 2, () => println("One"), () => println("Two"))
-myif(1 == 1, () => println("One"), () => println("Two"))
+def sqrtCustomIf(a: Double,
+                 criteria: (Double, Double) => Boolean = goodEnough()): Double = {
+  def sqrtInner(a: Double, x1: Double): Double = {
+    val x2 = 1.0 / 2 * (x1 + a / x1)
+    new If(criteria(x1, x2))(x2) Else (sqrtInner(a, x2))
+  }
+
+  sqrtInner(a, a)
+}
+
+assert(comp(sqrtCustomIf(1), 1))
+assert(comp(sqrtCustomIf(2), 1.414))
+assert(comp(sqrtCustomIf(4), 2))
+
 
 /*
  Problem 4
