@@ -95,7 +95,7 @@ class Rational(var n: Int, var d: Int) {
 
   def ==(other: Rational): Boolean = this.numer == other.numer && this.denom == other.denom
 
-  override def toString: String = s"$n / $d"
+  override def toString: String = s"$numer / $denom"
 }
 
 object Rational {
@@ -105,4 +105,15 @@ object Rational {
   }
 }
 
-println(Rational(1, 2) + Rational(3, 4))
+// +
+assert(Rational(1, 2).get + Rational(3, 4).get == Rational(5, 4).get)
+assert(Rational(1, 2).get + Rational(3, 4).get == Rational(10, 8).get)
+// -
+assert(Rational(1, 2).get - Rational(3, 4).get == Rational(-1, 4).get)
+// *
+assert(Rational(1, 2).get * Rational(3, 4).get == Rational(3, 8).get)
+// /
+assert(Rational(1, 2).get / Rational(3, 4).get == Rational(4, 6).get)
+// edge cases
+assert(Rational(1, 0).getOrElse(None) == None)
+
