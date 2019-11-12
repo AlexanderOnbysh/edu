@@ -25,7 +25,7 @@ Axis - 13
 ```
 
 ## Reference image
-[reference](projections.png)
+![reference](projections.png)
 
 ## Reproduced image
-[reference](chart.png)
+![reference](chart.png)
