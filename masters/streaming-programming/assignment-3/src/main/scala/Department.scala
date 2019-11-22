@@ -7,3 +7,8 @@ case class Department(
                        managerId: Int,
                        locationId: Int
                      )
+
+object Department {
+  def apply(departmentId: Int, departmentName: String, managerId: Int, locationId: Int): Department =
+    new Department(departmentId, departmentName, managerId, locationId)
+}

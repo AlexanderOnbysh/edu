@@ -14,3 +14,8 @@ case class Employee(
                      managerId: Int,
                      departmentId: Int
                    )
+
+object Employee {
+  def apply(id: Int, firstName: String, lastName: String, email: String, hireDate: LocalDate, jobId: String, salary: Int, managerId: Int, departmentId: Int): Employee =
+    new Employee(id, firstName, lastName, email, hireDate, jobId, salary, managerId, departmentId)
+}
