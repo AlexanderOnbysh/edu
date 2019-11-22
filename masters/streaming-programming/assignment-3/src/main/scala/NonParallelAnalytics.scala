@@ -45,3 +45,7 @@ class NonParallelAnalytics(employees: Iterable[Employee],
       .toList
 }
 
+object NonParallelAnalytics {
+  def apply(employees: Iterable[Employee], departments: List[Department]): NonParallelAnalytics =
+    new NonParallelAnalytics(employees, departments)
+}

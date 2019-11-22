@@ -44,3 +44,8 @@ class ParallelAnalytics(employees: Iterable[Employee],
       .flatten
       .toList
 }
+
+object ParallelAnalytics {
+  def apply(employees: Iterable[Employee], departments: Iterable[Department]): ParallelAnalytics =
+    new ParallelAnalytics(employees, departments)
+}

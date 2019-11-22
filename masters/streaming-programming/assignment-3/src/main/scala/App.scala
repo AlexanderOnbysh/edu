@@ -22,35 +22,20 @@ object App extends App {
   val employees = Parser.parseEmployees(employees_source)
   val departments = Parser.parseDepartments(departments_source)
 
-  val nonParallel: Analytics = new NonParallelAnalytics(employees, departments)
-  val parallel: Analytics = new NonParallelAnalytics(employees, departments)
+  val nonParallel: Analytics = NonParallelAnalytics(employees, departments)
+  val parallel: Analytics = NonParallelAnalytics(employees, departments)
 
-
-  time({
-    nonParallel.EmployeesForManagers
-  }, text = "NonParallel EmployeesForManagers")
-  time({
-    parallel.EmployeesForManagers
-  }, text = "Parallel EmployeesForManagers")
+  // @formatter:off
+  time({nonParallel.EmployeesForManagers}, text = "NonParallel EmployeesForManagers")
+  time({parallel.EmployeesForManagers}, text = "Parallel EmployeesForManagers")
   println("---")
-  time({
-    nonParallel.EmployeeWithLowestSalaryInEachDepartment
-  }, text = "NonParallel EmployeeWithLowestSalaryInEachDepartment")
-  time({
-    parallel.EmployeeWithLowestSalaryInEachDepartment
-  }, text = "Parallel EmployeeWithLowestSalaryInEachDepartment")
+  time({nonParallel.EmployeeWithLowestSalaryInEachDepartment}, text = "NonParallel EmployeeWithLowestSalaryInEachDepartment")
+  time({parallel.EmployeeWithLowestSalaryInEachDepartment}, text = "Parallel EmployeeWithLowestSalaryInEachDepartment")
   println("---")
-  time({
-    nonParallel.EmployeesWithSalaryOfDepartmentHigherThen(10000)
-  }, text = "NonParallel EmployeesWithSalaryOfDepartmentHigherThen")
-  time({
-    parallel.EmployeesWithSalaryOfDepartmentHigherThen(10000)
-  }, text = "Parallel EmployeesWithSalaryOfDepartmentHigherThen")
+  time({nonParallel.EmployeesWithSalaryOfDepartmentHigherThen(10000)}, text = "NonParallel EmployeesWithSalaryOfDepartmentHigherThen")
+  time({parallel.EmployeesWithSalaryOfDepartmentHigherThen(10000)}, text = "Parallel EmployeesWithSalaryOfDepartmentHigherThen")
   println("---")
-  time({
-    nonParallel.EmployeesForManagers
-  }, text = "NonParallel EmployeesForManagers")
-  time({
-    parallel.EmployeesForManagers
-  }, text = "Parallel EmployeesForManagers")
+  time({nonParallel.EmployeesForManagers}, text = "NonParallel EmployeesForManagers")
+  time({parallel.EmployeesForManagers}, text = "Parallel EmployeesForManagers")
+  // @formatter:on
 }
