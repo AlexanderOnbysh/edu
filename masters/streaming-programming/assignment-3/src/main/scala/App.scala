@@ -13,7 +13,7 @@ object App extends App {
       val result = block
       times += System.nanoTime() - t0
     }
-    println(s"$text: " + times / rounds * 0.000001 + " ms")
+    println(s"$text: " + s"${times / rounds * 0.000001}" + " ms")
   }
 
   val employees_source = Source.fromResource("employees.csv").getLines
