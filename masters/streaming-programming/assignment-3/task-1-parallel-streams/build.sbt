@@ -1,4 +1,4 @@
-name := "assignment-3"
+name := "task-1-parallel-streams"
 
 version := "0.1"
 
