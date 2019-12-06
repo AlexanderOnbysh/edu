@@ -1,0 +1,4 @@
+bin/
+confluent-5.3.1/
+kafka_2.12-2.3.0/
+*.tgz
