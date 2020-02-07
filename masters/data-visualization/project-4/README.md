@@ -2,4 +2,4 @@
 
 ## visualization
 
-[](chart.svg)
+[](chart.png)
