@@ -1,6 +1,7 @@
 # Assignment 2: MongoDB
 
 ## Queries
+```
 // connect to db and create collection
 use assignment
 db.createCollection('items')
@@ -157,6 +158,7 @@ db.orders.update(
 
 // 10. update all names
 db.orders.updateMany({}, {$set: {"customer.name": "Name"}})
+```
 
 ## Results
 ```
