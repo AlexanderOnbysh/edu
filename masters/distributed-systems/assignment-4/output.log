@@ -1,0 +1,470 @@
+cqlsh> CREATE KEYSPACE shop with replication = {'class' : 'SimpleStrategy', 'replication_factor':1};
+cqlsh> use shop;
+cqlsh:shop>
+cqlsh:shop> CREATE TABLE items
+        ... (
+        ...     category text,
+        ...     name text,
+        ...     price bigint,
+        ...     producer text,
+        ...     properties map<text, text>,
+        ...     PRIMARY KEY ((category), price, name)
+        ... );
+cqlsh:shop> CREATE INDEX producer on items (producer);
+cqlsh:shop> CREATE INDEX name on items (name);
+cqlsh:shop> INSERT INTO items (category, name, price, producer, properties)
+        ... VALUES ('Phone', 'iPhone 6s', 650, 'Apple', {'display': '6'});
+ducer, properties)
+VALUES ('Laptops', 'Chromebook', 450, 'Lenovo', {});
+INSERT INTO items (category, name, price, producer, properties)
+VALUES ('Laptops', 'Cheapbook', 200, 'Samsung', {});cqlsh:shop> INSERT INTO items (category, name, price, producer, properties)
+        ... VALUES ('Phone', 'iPhone 6', 650, 'Apple', {'display': '6,5'});
+cqlsh:shop> INSERT INTO items (category, name, price, producer, properties)
+        ... VALUES ('TV', 'Super res TV', 1200, 'Samsung', {});
+cqlsh:shop> INSERT INTO items (category, name, price, producer, properties)
+        ... VALUES ('Smart Watch', 'Smart watch v4', 300, 'LG', {});
+cqlsh:shop> INSERT INTO items (category, name, price, producer, properties)
+        ... VALUES ('Tablets', 'iPad 10', 800, 'Apple', {});
+cqlsh:shop> INSERT INTO items (category, name, price, producer, properties)
+        ... VALUES ('Laptops', 'MacBook pro', 4000, 'Apple', {});
+cqlsh:shop> INSERT INTO items (category, name, price, producer, properties)
+        ... VALUES ('Laptops', 'Chromebook', 450, 'Lenovo', {});
+cqlsh:shop> INSERT INTO items (category, name, price, producer, properties)
+        ... VALUES ('Laptops', 'Cheapbook', 200, 'Samsung', {});
+cqlsh:shop> DESCRIBE shop;
+
+CREATE KEYSPACE shop WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}  AND durable_writes = true;
+
+CREATE TABLE shop.items (
+    category text,
+    price bigint,
+    name text,
+    producer text,
+    properties map<text, text>,
+    PRIMARY KEY (category, price, name)
+) WITH CLUSTERING ORDER BY (price ASC, name ASC)
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99PERCENTILE';
+CREATE INDEX name ON shop.items (name);
+CREATE INDEX producer ON shop.items (producer);
+
+cqlsh:shop> -- 2.
+cqlsh:shop> SELECT *
+        ... FROM shop.items
+        ... WHERE category = 'Laptops'
+        ... ORDER BY price DESC;
+
+display' : '10'}
+WHERE category = 'Tablets'
+  AND price = 800
+  AND name = 'iPad 10';
+
+update shop.items
+set properties = properties - {'display'}
+WHERE category = 'Phone'
+  AND price = 650
+  AND name = 'iPhone 7';
+
+-- PART 2
+
+CREATE TABLE orders
+(
+    customer_name text,
+    order_time    timestamp,
+    total         double,
+    goods         set<text>,
+    PRIMARY KEY ((customer_name), order_time)
+);
+
+
+CREATE INDEX goods on orders (goods);
+
+INSERT INTO orders (customer_name, order_time, total, goods)
+VALUES ('Alexander', '2020-04-24', 500, {'book', 'pen', 'rope'});
+INSERT INTO orders (customer_name, order_time, total, goods)
+VALUES ('Dmitry', '2020-04-25', 600, {'phone'});
+INSERT INTO orders (customer_name, order_time, total, goods)
+VALUES ('Dmitry', '2020 category | price | name        | producer | properties
+----------+-------+-------------+----------+------------
+  Laptops |  4000 | MacBook pro |    Apple |       null
+  Laptops |   450 |  Chromebook |   Lenovo |       null
+  Laptops |   200 |   Cheapbook |  Samsung |       null
+
+(3 rows)
+cqlsh:shop>
+cqlsh:shop> -- 3.
+cqlsh:shop> SELECT *
+        ... FROM shop.items
+        ... WHERE category = 'Laptops'
+        ...   AND name = 'Chromebook';
+
+ category | price | name       | producer | properties
+----------+-------+------------+----------+------------
+  Laptops |   450 | Chromebook |   Lenovo |       null
+
+(1 rows)
+cqlsh:shop> SELECT *
+        ... FROM shop.items
+        ... WHERE category = 'Laptops'
+        ...   AND price >= 300
+        ...   and price <= 3000;
+
+ category | price | name       | producer | properties
+----------+-------+------------+----------+------------
+  Laptops |   450 | Chromebook |   Lenovo |       null
+
+(1 rows)
+cqlsh:shop> SELECT *
+        ... FROM shop.items
+        ... WHERE category = 'Laptops'
+        ...   AND producer = 'Samsung';
+
+ category | price | name      | producer | properties
+----------+-------+-----------+----------+------------
+  Laptops |   200 | Cheapbook |  Samsung |       null
+
+(1 rows)
+cqlsh:shop>
+cqlsh:shop> -- 4.
+cqlsh:shop> SELECT *
+        ... FROM shop.items
+        ... WHERE category = 'Phone'
+        ...   AND properties CONTAINS KEY 'display' ALLOW FILTERING;
+-03-10', 1000, {'laptop'});
+
+-- 1.
+DESCRIBE orders;
+
+-- 2.
+SELECT *
+FROM shop.orders
+WHERE customer_name = 'Alexander'
+ORDER BY order_time DESC;
+
+-- 3.
+SELECT *
+FROM shop.orders
+WHERE customer_name = 'Dmitry'
+  AND goods CONTAINS 'laptop';
+
+-- 4.
+SELECT customer_name, count(order_time)
+FROM shop.orders
+WHERE customer_name = 'Dmitry'
+  and order_time < '2020-04-01'
+GROUP BY customer_name;
+
+-- 5.
+SELECT customer_name, avg(total)
+FROM shop.orders
+GROUP BY customer_name;
+
+-- 6.
+SELECT customer_name, sum(total)
+FROM shop.orders
+GROUP BY customer_name;
+
+-- 7.
+SELECT customer_name, max(total)
+FROM shop.orders
+GROUP BY customer_name;
+
+-- 8.
+UPDATE shop.orders
+SET goods = goods + {'soap'},
+    total = 550
+WHERE customer_name = 'Alexander'
+  AND order_time = '2020-04-
+24';
+
+SELECT *
+FROM shop.orders
+WHERE customer_name = 'Alexander'
+  AND order_time = '2020-04-24';
+
+-- 9.
+SELECT customer_name, goods, writetime(total)
+FROM shop.orders
+GROUP BY customer_name, order_time;
+
+-- 10.
+INSERT INTO orders (customer_name, order_time, total, goods)
+VALUES ('Alexander', '2020-03-18', 10, {'cup'}) USING TTL 100;
+
+-- 11.
+SELECT JSON *
+FROM shop.orders;
+
+-- 12.
+INSERT INTO orders JSON
+    '{
+      "customer_name": "Ivan",
+      "order_time": "2010-04-01 00:05:10.000Z",
+      "total": 1005,
+      "goods": [
+        "tesla",
+        "pen"
+      ]
+    }';
+
+SELECT *
+FROM shop.orders
+WHERE customer_name = 'Ivan';
+
+
+
+ category | price | name      | producer | properties
+----------+-------+-----------+----------+--------------------
+    Phone |   650 |  iPhone 6 |    Apple | {'display': '6,5'}
+    Phone |   650 | iPhone 6s |    Apple |   {'display': '6'}
+
+(2 rows)
+cqlsh:shop> SELECT *
+        ... FROM shop.items
+        ... WHERE category = 'Phone'
+        ...   AND properties CONTAINS KEY 'display'
+        ...   AND properties['display'] = '6' ALLOW FILTERING;
+
+ category | price | name      | producer | properties
+----------+-------+-----------+----------+------------------
+    Phone |   650 | iPhone 6s |    Apple | {'display': '6'}
+
+(1 rows)
+cqlsh:shop>
+cqlsh:shop> -- 5.
+cqlsh:shop> UPDATE shop.items
+        ... SET properties['display'] = '8'
+        ... WHERE category = 'Phone'
+        ...   AND price = 650
+        ...   AND name = 'iPhone 7';
+cqlsh:shop>
+cqlsh:shop> UPDATE shop.items
+        ... SET properties = properties + {'display' : '10'}
+        ... WHERE category = 'Tablets'
+        ...   AND price = 800
+        ...   AND name = 'iPad 10';
+cqlsh:shop>
+cqlsh:shop> update shop.items
+        ... set properties = properties - {'display'}
+        ... WHERE category = 'Phone'
+        ...   AND price = 650
+        ...   AND name = 'iPhone 7';
+cqlsh:shop>
+cqlsh:shop> -- PART 2
+cqlsh:shop>
+cqlsh:shop> CREATE TABLE orders
+        ... (
+        ...     customer_name text,
+        ...     order_time    timestamp,
+        ...     total         double,
+        ...     goods         set<text>,
+        ...     PRIMARY KEY ((customer_name), order_time)
+        ... );
+cqlsh:shop>
+cqlsh:shop>
+cqlsh:shop> CREATE INDEX goods on orders (goods);
+cqlsh:shop>
+cqlsh:shop> INSERT INTO orders (customer_name, order_time, total, goods)
+        ... VALUES ('Alexander', '2020-04-24', 500, {'book', 'pen', 'rope'});
+cqlsh:shop> INSERT INTO orders (customer_name, order_time, total, goods)
+        ... VALUES ('Dmitry', '2020-04-25', 600, {'phone'});
+cqlsh:shop> INSERT INTO orders (customer_name, order_time, total, goods)
+        ... VALUES ('Dmitry', '2020-03-10', 1000, {'laptop'});
+cqlsh:shop>
+cqlsh:shop> -- 1.
+cqlsh:shop> DESCRIBE orders;
+
+CREATE TABLE shop.orders (
+    customer_name text,
+    order_time timestamp,
+    goods set<text>,
+    total double,
+    PRIMARY KEY (customer_name, order_time)
+) WITH CLUSTERING ORDER BY (order_time ASC)
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99PERCENTILE';
+CREATE INDEX goods ON shop.orders (values(goods));
+
+cqlsh:shop>
+cqlsh:shop> -- 2.
+cqlsh:shop> SELECT *
+        ... FROM shop.orders
+        ... WHERE customer_name = 'Alexander'
+        ... ORDER BY order_time DESC;
+
+ customer_name | order_time                      | goods                   | total
+---------------+---------------------------------+-------------------------+-------
+     Alexander | 2020-04-24 00:00:00.000000+0000 | {'book', 'pen', 'rope'} |   500
+
+(1 rows)
+cqlsh:shop>
+cqlsh:shop> -- 3.
+cqlsh:shop> SELECT *
+        ... FROM shop.orders
+        ... WHERE customer_name = 'Dmitry'
+        ...   AND goods CONTAINS 'laptop';
+
+ customer_name | order_time                      | goods      | total
+---------------+---------------------------------+------------+-------
+        Dmitry | 2020-03-10 00:00:00.000000+0000 | {'laptop'} |  1000
+
+(1 rows)
+cqlsh:shop>
+cqlsh:shop> -- 4.
+cqlsh:shop> SELECT customer_name, count(order_time)
+        ... FROM shop.orders
+        ... WHERE customer_name = 'Dmitry'
+        ...   and order_time < '2020-04-01'
+        ... GROUP BY customer_name;
+
+ customer_name | system.count(order_time)
+---------------+--------------------------
+        Dmitry |                        1
+
+(1 rows)
+cqlsh:shop>
+cqlsh:shop> -- 5.
+cqlsh:shop> SELECT customer_name, avg(total)
+        ... FROM shop.orders
+        ... GROUP BY customer_name;
+
+ customer_name | system.avg(total)
+---------------+-------------------
+        Dmitry |               800
+     Alexander |               500
+
+(2 rows)
+
+Warnings :
+Aggregation query used without partition key
+
+cqlsh:shop>
+cqlsh:shop> -- 6.
+cqlsh:shop> SELECT customer_name, sum(total)
+        ... FROM shop.orders
+        ... GROUP BY customer_name;
+
+ customer_name | system.sum(total)
+---------------+-------------------
+        Dmitry |              1600
+     Alexander |               500
+
+(2 rows)
+
+Warnings :
+Aggregation query used without partition key
+
+cqlsh:shop>
+cqlsh:shop> -- 7.
+cqlsh:shop> SELECT customer_name, max(total)
+        ... FROM shop.orders
+        ... GROUP BY customer_name;
+
+ customer_name | system.max(total)
+---------------+-------------------
+        Dmitry |              1000
+     Alexander |               500
+
+(2 rows)
+
+Warnings :
+Aggregation query used without partition key
+
+cqlsh:shop>
+cqlsh:shop> -- 8.
+cqlsh:shop> UPDATE shop.orders
+        ... SET goods = goods + {'soap'},
+        ...     total = 550
+        ... WHERE customer_name = 'Alexander'
+        ...   AND order_time = '2020-04-24';
+cqlsh:shop>
+cqlsh:shop> SELECT *
+        ... FROM shop.orders
+        ... WHERE customer_name = 'Alexander'
+        ...   AND order_time = '2020-04-24';
+
+ customer_name | order_time                      | goods                           | total
+---------------+---------------------------------+---------------------------------+-------
+     Alexander | 2020-04-24 00:00:00.000000+0000 | {'book', 'pen', 'rope', 'soap'} |   550
+
+(1 rows)
+cqlsh:shop>
+cqlsh:shop> -- 9.
+cqlsh:shop> SELECT customer_name, goods, writetime(total)
+        ... FROM shop.orders
+        ... GROUP BY customer_name, order_time;
+
+ customer_name | goods                           | writetime(total)
+---------------+---------------------------------+------------------
+        Dmitry |                      {'laptop'} | 1587911241061965
+        Dmitry |                       {'phone'} | 1587911241056278
+     Alexander | {'book', 'pen', 'rope', 'soap'} | 1587911241251614
+
+(3 rows)
+
+Warnings :
+Aggregation query used without partition key
+
+cqlsh:shop>
+cqlsh:shop> -- 10.
+cqlsh:shop> INSERT INTO orders (customer_name, order_time, total, goods)
+        ... VALUES ('Alexander', '2020-03-18', 10, {'cup'}) USING TTL 100;
+cqlsh:shop>
+cqlsh:shop> -- 11.
+cqlsh:shop> SELECT JSON *
+        ... FROM shop.orders;
+
+ [json]
+------------------------------------------------------------------------------------------------------------------------------------
+                        {"customer_name": "Dmitry", "order_time": "2020-03-10 00:00:00.000Z", "goods": ["laptop"], "total": 1000.0}
+                          {"customer_name": "Dmitry", "order_time": "2020-04-25 00:00:00.000Z", "goods": ["phone"], "total": 600.0}
+                          {"customer_name": "Alexander", "order_time": "2020-03-18 00:00:00.000Z", "goods": ["cup"], "total": 10.0}
+ {"customer_name": "Alexander", "order_time": "2020-04-24 00:00:00.000Z", "goods": ["book", "pen", "rope", "soap"], "total": 550.0}
+
+(4 rows)
+cqlsh:shop>
+cqlsh:shop> -- 12.
+cqlsh:shop> INSERT INTO orders JSON
+        ...     '{
+        ...       "customer_name": "Ivan",
+        ...       "order_time": "2010-04-01 00:05:10.000Z",
+        ...       "total": 1005,
+        ...       "goods": [
+        ...         "tesla",
+        ...         "pen"
+        ...       ]
+        ...     }';
+cqlsh:shop>
+cqlsh:shop> SELECT *
+        ... FROM shop.orders
+        ... WHERE customer_name = 'Ivan';
+
+ customer_name | order_time                      | goods            | total
+---------------+---------------------------------+------------------+-------
+          Ivan | 2010-04-01 00:05:10.000000+0000 | {'pen', 'tesla'} |  1005
+
+(1 rows)
