@@ -1,0 +1,18 @@
+docker exec -it mongo1 mongo --eval "\
+				db.coll.insert({command: 'Task2-a: acknowledged: off; jornaling: off'}, { writeConcern: { w: 0, j: false } });\
+				db.coll.find({command : 'Task2-a: acknowledged: off; jornaling: off'}).readPref('primary');\
+		"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("060f531a-4f8b-4d51-979a-2ee3f8e0e580") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9eec25eb266ebae6e0712"), "command" : "Task2-a: acknowledged: off; jornaling: off" }
+docker exec -it mongo1 mongo --eval "\
+				db.coll.insert({command: 'Task2-b: acknowledged: off; jornaling: off'}, { writeConcern: { w: 0, j: false } });\
+				db.coll.find({command : 'Task2-b: acknowledged: off; jornaling: off'}).readPref('secondary');\
+		"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("28a04a6c-6a12-42eb-988e-a460d917100f") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9eec206d7782b130591f8"), "command" : "Task2-b: acknowledged: off; jornaling: off" }

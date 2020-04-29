@@ -1,0 +1,36 @@
+docker exec -it mongo1 mongo --eval "db.coll.insert({command: 'local'}, { writeConcern: { w: 1}});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("e0ff92ce-b667-4c27-bf9c-a1f97f040864") }
+MongoDB server version: 4.2.6
+WriteResult({ "nInserted" : 1 })
+docker exec -it mongo2 mongo --eval "rs.slaveOk(); db.coll.find({command : 'local'}).readConcern('local');"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("1e8c4c7c-d9b9-4cf2-aed8-1da1bb42b3ef") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9ef751226dbfc2fbb7bb6"), "command" : "local" }
+docker exec -it mongo1 mongo --eval "db.coll.insert({command: 'majority'}, { writeConcern: { w: 1}});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("9de45b52-8c5c-42ad-8424-b8c6841e0d94") }
+MongoDB server version: 4.2.6
+WriteResult({ "nInserted" : 1 })
+docker exec -it mongo2 mongo --eval "rs.slaveOk(); db.coll.find({command : 'local'}).readConcern('majority');"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("93934388-51a9-44e5-ba60-a097d9a3fbcd") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9ef751226dbfc2fbb7bb6"), "command" : "local" }
+docker exec -it mongo1 mongo --eval "db.coll.insert({command: 'linearizable'}, { writeConcern: { w: 1}});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("4493e14b-42a1-4170-a930-f70678778c46") }
+MongoDB server version: 4.2.6
+WriteResult({ "nInserted" : 1 })
+docker exec -it mongo1 mongo --eval "rs.slaveOk(); db.coll.find({command : 'local'}).readConcern('linearizable');"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("8ad741b6-2e79-4932-a19d-525015e56f54") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9ef751226dbfc2fbb7bb6"), "command" : "local" }

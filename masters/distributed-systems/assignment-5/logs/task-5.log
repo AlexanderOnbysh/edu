@@ -1,0 +1,457 @@
+docker exec -it mongo1 mongo --eval "rs.status()"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("44287bc3-7ad1-4778-8ab7-5062b7343335") }
+MongoDB server version: 4.2.6
+{
+	"set" : "mongo-network",
+	"date" : ISODate("2020-04-29T21:17:59.932Z"),
+	"myState" : 1,
+	"term" : NumberLong(1),
+	"syncingTo" : "",
+	"syncSourceHost" : "",
+	"syncSourceId" : -1,
+	"heartbeatIntervalMillis" : NumberLong(2000),
+	"majorityVoteCount" : 2,
+	"writeMajorityCount" : 2,
+	"optimes" : {
+		"lastCommittedOpTime" : {
+			"ts" : Timestamp(1588195065, 1),
+			"t" : NumberLong(1)
+		},
+		"lastCommittedWallTime" : ISODate("2020-04-29T21:17:45.713Z"),
+		"readConcernMajorityOpTime" : {
+			"ts" : Timestamp(1588195065, 1),
+			"t" : NumberLong(1)
+		},
+		"readConcernMajorityWallTime" : ISODate("2020-04-29T21:17:45.713Z"),
+		"appliedOpTime" : {
+			"ts" : Timestamp(1588195065, 1),
+			"t" : NumberLong(1)
+		},
+		"durableOpTime" : {
+			"ts" : Timestamp(1588195065, 1),
+			"t" : NumberLong(1)
+		},
+		"lastAppliedWallTime" : ISODate("2020-04-29T21:17:45.713Z"),
+		"lastDurableWallTime" : ISODate("2020-04-29T21:17:45.713Z")
+	},
+	"lastStableRecoveryTimestamp" : Timestamp(1588195064, 3),
+	"lastStableCheckpointTimestamp" : Timestamp(1588195064, 3),
+	"electionCandidateMetrics" : {
+		"lastElectionReason" : "electionTimeout",
+		"lastElectionDate" : ISODate("2020-04-29T21:17:44.368Z"),
+		"electionTerm" : NumberLong(1),
+		"lastCommittedOpTimeAtElection" : {
+			"ts" : Timestamp(0, 0),
+			"t" : NumberLong(-1)
+		},
+		"lastSeenOpTimeAtElection" : {
+			"ts" : Timestamp(1588195054, 1),
+			"t" : NumberLong(-1)
+		},
+		"numVotesNeeded" : 2,
+		"priorityAtElection" : 1,
+		"electionTimeoutMillis" : NumberLong(10000),
+		"numCatchUpOps" : NumberLong(0),
+		"newTermStartDate" : ISODate("2020-04-29T21:17:44.389Z"),
+		"wMajorityWriteAvailabilityDate" : ISODate("2020-04-29T21:17:45.695Z")
+	},
+	"members" : [
+		{
+			"_id" : 0,
+			"name" : "mongo1:27017",
+			"health" : 1,
+			"state" : 1,
+			"stateStr" : "PRIMARY",
+			"uptime" : 29,
+			"optime" : {
+				"ts" : Timestamp(1588195065, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDate" : ISODate("2020-04-29T21:17:45Z"),
+			"syncingTo" : "",
+			"syncSourceHost" : "",
+			"syncSourceId" : -1,
+			"infoMessage" : "could not find member to sync from",
+			"electionTime" : Timestamp(1588195064, 1),
+			"electionDate" : ISODate("2020-04-29T21:17:44Z"),
+			"configVersion" : 81561,
+			"self" : true,
+			"lastHeartbeatMessage" : ""
+		},
+		{
+			"_id" : 1,
+			"name" : "mongo2:27017",
+			"health" : 1,
+			"state" : 2,
+			"stateStr" : "SECONDARY",
+			"uptime" : 25,
+			"optime" : {
+				"ts" : Timestamp(1588195065, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDurable" : {
+				"ts" : Timestamp(1588195065, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDate" : ISODate("2020-04-29T21:17:45Z"),
+			"optimeDurableDate" : ISODate("2020-04-29T21:17:45Z"),
+			"lastHeartbeat" : ISODate("2020-04-29T21:17:58.398Z"),
+			"lastHeartbeatRecv" : ISODate("2020-04-29T21:17:59.693Z"),
+			"pingMs" : NumberLong(0),
+			"lastHeartbeatMessage" : "",
+			"syncingTo" : "mongo1:27017",
+			"syncSourceHost" : "mongo1:27017",
+			"syncSourceId" : 0,
+			"infoMessage" : "",
+			"configVersion" : 81561
+		},
+		{
+			"_id" : 2,
+			"name" : "mongo3:27017",
+			"health" : 1,
+			"state" : 2,
+			"stateStr" : "SECONDARY",
+			"uptime" : 25,
+			"optime" : {
+				"ts" : Timestamp(1588195065, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDurable" : {
+				"ts" : Timestamp(1588195065, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDate" : ISODate("2020-04-29T21:17:45Z"),
+			"optimeDurableDate" : ISODate("2020-04-29T21:17:45Z"),
+			"lastHeartbeat" : ISODate("2020-04-29T21:17:58.398Z"),
+			"lastHeartbeatRecv" : ISODate("2020-04-29T21:17:59.701Z"),
+			"pingMs" : NumberLong(0),
+			"lastHeartbeatMessage" : "",
+			"syncingTo" : "mongo1:27017",
+			"syncSourceHost" : "mongo1:27017",
+			"syncSourceId" : 0,
+			"infoMessage" : "",
+			"configVersion" : 81561
+		}
+	],
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588195065, 1),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	},
+	"operationTime" : Timestamp(1588195065, 1)
+}
+docker stop mongo1
+mongo1
+sleep 5
+docker exec -it mongo2 mongo --eval "rs.status()"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("4c5e4038-d548-491d-bd05-737aaba96a37") }
+MongoDB server version: 4.2.6
+{
+	"set" : "mongo-network",
+	"date" : ISODate("2020-04-29T21:18:06.449Z"),
+	"myState" : 1,
+	"term" : NumberLong(2),
+	"syncingTo" : "",
+	"syncSourceHost" : "",
+	"syncSourceId" : -1,
+	"heartbeatIntervalMillis" : NumberLong(2000),
+	"majorityVoteCount" : 2,
+	"writeMajorityCount" : 2,
+	"optimes" : {
+		"lastCommittedOpTime" : {
+			"ts" : Timestamp(1588195080, 2),
+			"t" : NumberLong(2)
+		},
+		"lastCommittedWallTime" : ISODate("2020-04-29T21:18:00.020Z"),
+		"readConcernMajorityOpTime" : {
+			"ts" : Timestamp(1588195080, 2),
+			"t" : NumberLong(2)
+		},
+		"readConcernMajorityWallTime" : ISODate("2020-04-29T21:18:00.020Z"),
+		"appliedOpTime" : {
+			"ts" : Timestamp(1588195080, 2),
+			"t" : NumberLong(2)
+		},
+		"durableOpTime" : {
+			"ts" : Timestamp(1588195080, 2),
+			"t" : NumberLong(2)
+		},
+		"lastAppliedWallTime" : ISODate("2020-04-29T21:18:00.020Z"),
+		"lastDurableWallTime" : ISODate("2020-04-29T21:18:00.020Z")
+	},
+	"lastStableRecoveryTimestamp" : Timestamp(1588195064, 3),
+	"lastStableCheckpointTimestamp" : Timestamp(1588195064, 3),
+	"electionCandidateMetrics" : {
+		"lastElectionReason" : "stepUpRequestSkipDryRun",
+		"lastElectionDate" : ISODate("2020-04-29T21:18:00.015Z"),
+		"electionTerm" : NumberLong(2),
+		"lastCommittedOpTimeAtElection" : {
+			"ts" : Timestamp(1588195065, 1),
+			"t" : NumberLong(1)
+		},
+		"lastSeenOpTimeAtElection" : {
+			"ts" : Timestamp(1588195065, 1),
+			"t" : NumberLong(1)
+		},
+		"numVotesNeeded" : 2,
+		"priorityAtElection" : 1,
+		"electionTimeoutMillis" : NumberLong(10000),
+		"priorPrimaryMemberId" : 0,
+		"numCatchUpOps" : NumberLong(0),
+		"newTermStartDate" : ISODate("2020-04-29T21:18:00.020Z"),
+		"wMajorityWriteAvailabilityDate" : ISODate("2020-04-29T21:18:01.744Z")
+	},
+	"electionParticipantMetrics" : {
+		"votedForCandidate" : true,
+		"electionTerm" : NumberLong(1),
+		"lastVoteDate" : ISODate("2020-04-29T21:17:44.371Z"),
+		"electionCandidateMemberId" : 0,
+		"voteReason" : "",
+		"lastAppliedOpTimeAtElection" : {
+			"ts" : Timestamp(1588195054, 1),
+			"t" : NumberLong(-1)
+		},
+		"maxAppliedOpTimeInSet" : {
+			"ts" : Timestamp(1588195054, 1),
+			"t" : NumberLong(-1)
+		},
+		"priorityAtElection" : 1
+	},
+	"members" : [
+		{
+			"_id" : 0,
+			"name" : "mongo1:27017",
+			"health" : 0,
+			"state" : 8,
+			"stateStr" : "(not reachable/healthy)",
+			"uptime" : 0,
+			"optime" : {
+				"ts" : Timestamp(0, 0),
+				"t" : NumberLong(-1)
+			},
+			"optimeDurable" : {
+				"ts" : Timestamp(0, 0),
+				"t" : NumberLong(-1)
+			},
+			"optimeDate" : ISODate("1970-01-01T00:00:00Z"),
+			"optimeDurableDate" : ISODate("1970-01-01T00:00:00Z"),
+			"lastHeartbeat" : ISODate("2020-04-29T21:18:06.096Z"),
+			"lastHeartbeatRecv" : ISODate("2020-04-29T21:18:00.903Z"),
+			"pingMs" : NumberLong(0),
+			"lastHeartbeatMessage" : "Error connecting to mongo1:27017 :: caused by :: Could not find address for mongo1:27017: SocketException: Host not found (authoritative)",
+			"syncingTo" : "",
+			"syncSourceHost" : "",
+			"syncSourceId" : -1,
+			"infoMessage" : "",
+			"configVersion" : -1
+		},
+		{
+			"_id" : 1,
+			"name" : "mongo2:27017",
+			"health" : 1,
+			"state" : 1,
+			"stateStr" : "PRIMARY",
+			"uptime" : 36,
+			"optime" : {
+				"ts" : Timestamp(1588195080, 2),
+				"t" : NumberLong(2)
+			},
+			"optimeDate" : ISODate("2020-04-29T21:18:00Z"),
+			"syncingTo" : "",
+			"syncSourceHost" : "",
+			"syncSourceId" : -1,
+			"infoMessage" : "",
+			"electionTime" : Timestamp(1588195080, 1),
+			"electionDate" : ISODate("2020-04-29T21:18:00Z"),
+			"configVersion" : 81561,
+			"self" : true,
+			"lastHeartbeatMessage" : ""
+		},
+		{
+			"_id" : 2,
+			"name" : "mongo3:27017",
+			"health" : 1,
+			"state" : 2,
+			"stateStr" : "SECONDARY",
+			"uptime" : 31,
+			"optime" : {
+				"ts" : Timestamp(1588195080, 2),
+				"t" : NumberLong(2)
+			},
+			"optimeDurable" : {
+				"ts" : Timestamp(1588195080, 2),
+				"t" : NumberLong(2)
+			},
+			"optimeDate" : ISODate("2020-04-29T21:18:00Z"),
+			"optimeDurableDate" : ISODate("2020-04-29T21:18:00Z"),
+			"lastHeartbeat" : ISODate("2020-04-29T21:18:06.021Z"),
+			"lastHeartbeatRecv" : ISODate("2020-04-29T21:18:05.736Z"),
+			"pingMs" : NumberLong(0),
+			"lastHeartbeatMessage" : "",
+			"syncingTo" : "mongo2:27017",
+			"syncSourceHost" : "mongo2:27017",
+			"syncSourceId" : 1,
+			"infoMessage" : "",
+			"configVersion" : 81561
+		}
+	],
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588195080, 2),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	},
+	"operationTime" : Timestamp(1588195080, 2)
+}
+docker exec -it mongo2 mongo --eval "db.coll.insert({command: 'WRITE NODE2'}, { writeConcern: { w: 1}}); db.coll.find({command : 'WRITE NODE2'});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("47b8301c-a5a4-4e91-b464-fc42e51f8ef7") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9ef0e570fb08cbd30b2aa"), "command" : "WRITE NODE2" }
+docker start mongo1
+mongo1
+sleep 5
+docker exec -it mongo1 mongo --eval "rs.status()"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("4ed8caa8-0ccc-4820-b541-0abbfd9f52d9") }
+MongoDB server version: 4.2.6
+{
+	"set" : "mongo-network",
+	"date" : ISODate("2020-04-29T21:18:12.220Z"),
+	"myState" : 2,
+	"term" : NumberLong(2),
+	"syncingTo" : "mongo3:27017",
+	"syncSourceHost" : "mongo3:27017",
+	"syncSourceId" : 2,
+	"heartbeatIntervalMillis" : NumberLong(2000),
+	"majorityVoteCount" : 2,
+	"writeMajorityCount" : 2,
+	"optimes" : {
+		"lastCommittedOpTime" : {
+			"ts" : Timestamp(1588195086, 2),
+			"t" : NumberLong(2)
+		},
+		"lastCommittedWallTime" : ISODate("2020-04-29T21:18:06.642Z"),
+		"readConcernMajorityOpTime" : {
+			"ts" : Timestamp(1588195086, 2),
+			"t" : NumberLong(2)
+		},
+		"readConcernMajorityWallTime" : ISODate("2020-04-29T21:18:06.642Z"),
+		"appliedOpTime" : {
+			"ts" : Timestamp(1588195086, 2),
+			"t" : NumberLong(2)
+		},
+		"durableOpTime" : {
+			"ts" : Timestamp(1588195086, 2),
+			"t" : NumberLong(2)
+		},
+		"lastAppliedWallTime" : ISODate("2020-04-29T21:18:06.642Z"),
+		"lastDurableWallTime" : ISODate("2020-04-29T21:18:06.642Z")
+	},
+	"lastStableRecoveryTimestamp" : Timestamp(1588195065, 1),
+	"lastStableCheckpointTimestamp" : Timestamp(1588195065, 1),
+	"members" : [
+		{
+			"_id" : 0,
+			"name" : "mongo1:27017",
+			"health" : 1,
+			"state" : 2,
+			"stateStr" : "SECONDARY",
+			"uptime" : 5,
+			"optime" : {
+				"ts" : Timestamp(1588195086, 2),
+				"t" : NumberLong(2)
+			},
+			"optimeDate" : ISODate("2020-04-29T21:18:06Z"),
+			"syncingTo" : "mongo3:27017",
+			"syncSourceHost" : "mongo3:27017",
+			"syncSourceId" : 2,
+			"infoMessage" : "",
+			"configVersion" : 81561,
+			"self" : true,
+			"lastHeartbeatMessage" : ""
+		},
+		{
+			"_id" : 1,
+			"name" : "mongo2:27017",
+			"health" : 1,
+			"state" : 1,
+			"stateStr" : "PRIMARY",
+			"uptime" : 4,
+			"optime" : {
+				"ts" : Timestamp(1588195086, 2),
+				"t" : NumberLong(2)
+			},
+			"optimeDurable" : {
+				"ts" : Timestamp(1588195086, 2),
+				"t" : NumberLong(2)
+			},
+			"optimeDate" : ISODate("2020-04-29T21:18:06Z"),
+			"optimeDurableDate" : ISODate("2020-04-29T21:18:06Z"),
+			"lastHeartbeat" : ISODate("2020-04-29T21:18:10.889Z"),
+			"lastHeartbeatRecv" : ISODate("2020-04-29T21:18:12.104Z"),
+			"pingMs" : NumberLong(0),
+			"lastHeartbeatMessage" : "",
+			"syncingTo" : "",
+			"syncSourceHost" : "",
+			"syncSourceId" : -1,
+			"infoMessage" : "",
+			"electionTime" : Timestamp(1588195080, 1),
+			"electionDate" : ISODate("2020-04-29T21:18:00Z"),
+			"configVersion" : 81561
+		},
+		{
+			"_id" : 2,
+			"name" : "mongo3:27017",
+			"health" : 1,
+			"state" : 2,
+			"stateStr" : "SECONDARY",
+			"uptime" : 4,
+			"optime" : {
+				"ts" : Timestamp(1588195086, 2),
+				"t" : NumberLong(2)
+			},
+			"optimeDurable" : {
+				"ts" : Timestamp(1588195086, 2),
+				"t" : NumberLong(2)
+			},
+			"optimeDate" : ISODate("2020-04-29T21:18:06Z"),
+			"optimeDurableDate" : ISODate("2020-04-29T21:18:06Z"),
+			"lastHeartbeat" : ISODate("2020-04-29T21:18:10.889Z"),
+			"lastHeartbeatRecv" : ISODate("2020-04-29T21:18:10.310Z"),
+			"pingMs" : NumberLong(0),
+			"lastHeartbeatMessage" : "",
+			"syncingTo" : "mongo2:27017",
+			"syncSourceHost" : "mongo2:27017",
+			"syncSourceId" : 1,
+			"infoMessage" : "",
+			"configVersion" : 81561
+		}
+	],
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588195086, 2),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	},
+	"operationTime" : Timestamp(1588195086, 2)
+}
+docker exec -it mongo1 mongo --eval "rs.slaveOk(); db.coll.find({command : 'WRITE NODE2'});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("9cbd9062-f9eb-4edb-829f-f83e26055422") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9ef0e570fb08cbd30b2aa"), "command" : "WRITE NODE2" }

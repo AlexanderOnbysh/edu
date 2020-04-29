@@ -1,0 +1,36 @@
+docker exec -it mongo1 mongo --eval "\
+		db.coll.insert({command: 'acknowledged: off; jornaling: off'}, { writeConcern: { w: 0, j: false } });\
+		db.coll.find({command : 'acknowledged: off; jornaling: off'});\
+		"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("fcbfbc31-0513-4f59-bba0-4dec6df81616") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9eea9759e5ff3dc8729ae"), "command" : "acknowledged: off; jornaling: off" }
+docker exec -it mongo1 mongo --eval "\
+		db.coll.insert({command: 'acknowledged: on; jornaling: off'}, { writeConcern: { w: 1, j: false } });\
+		db.coll.find({command : 'acknowledged: on; jornaling: off'});\
+		"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("961e29e1-575c-40a3-a544-7fbab4e839a1") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9eea969b127f9ab56229e"), "command" : "acknowledged: on; jornaling: off" }
+docker exec -it mongo1 mongo --eval "\
+		db.coll.insert({command: 'acknowledged: on; jornaling: on'}, { writeConcern: { w: 1, j: true } });\
+		db.coll.find({command : 'acknowledged: on; jornaling: on'});\
+		"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("95f98e15-b940-42e3-a519-7084c13a8967") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9eea9e76c0d31fb576f82"), "command" : "acknowledged: on; jornaling: on" }
+docker exec -it mongo1 mongo --eval "\
+		db.coll.insert({command: 'acknowledged: on(replica); jornaling: on'}, { writeConcern: { w: 3, j: true } });\
+		db.coll.find({command : 'acknowledged: on; jornaling: on'});\
+		"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("9276214d-4759-41f7-86ed-dc687c994104") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9eea9e76c0d31fb576f82"), "command" : "acknowledged: on; jornaling: on" }

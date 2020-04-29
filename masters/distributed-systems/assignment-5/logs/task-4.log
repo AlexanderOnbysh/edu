@@ -1,0 +1,17 @@
+docker stop mongo3
+mongo3
+sleep 1
+docker exec -i mongo1 mongo --eval "\
+		db.coll.insert({command: 'acknowledged: on(replica); jornaling: on'}, { writeConcern: { w: 3, j: true } });\
+		db.coll.find({command : 'acknowledged: on; jornaling: on'});\
+		" &
+echo "Start node"
+Start node
+docker start mongo3
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("fa9305ab-de4f-4eae-a209-8ee1c720c8dc") }
+MongoDB server version: 4.2.6
+mongo3
+sleep 3
+{ "_id" : ObjectId("5ea9eea9e76c0d31fb576f82"), "command" : "acknowledged: on; jornaling: on" }

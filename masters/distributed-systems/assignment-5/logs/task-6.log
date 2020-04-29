@@ -1,0 +1,29 @@
+docker stop mongo3
+mongo3
+docker exec -it mongo1 mongo --eval "db.coll.insert({command: 'WRITE TO MASTER'}, { writeConcern: { w: 0}}); db.coll.find({command : 'WRITE TO MASTER'});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("696fb83a-4c15-47f8-98ba-794ad8db80aa") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9ef428debe5f35a824f58"), "command" : "WRITE TO MASTER" }
+sleep 3
+docker stop mongo1
+mongo1
+docker start mongo3
+mongo3
+sleep 3
+docker exec -it mongo3 mongo --eval "rs.slaveOk(); db.coll.find({command : 'WRITE TO MASTER'});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("6fa531dc-068c-438f-a13f-1407a12a13eb") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9ef428debe5f35a824f58"), "command" : "WRITE TO MASTER" }
+docker start mongo1
+mongo1
+sleep 3
+docker exec -it mongo2 mongo --eval "rs.slaveOk(); db.coll.find({command : 'WRITE TO MASTER'});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("53163eba-c752-4efa-9d21-3127f53109ab") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9ef428debe5f35a824f58"), "command" : "WRITE TO MASTER" }

@@ -1,0 +1,234 @@
+docker network create mongo-network
+63cbbe907ee4c310a545c96d8c003071a56a44131404df50c562b13f2e006661
+# primary node
+docker run -d \
+				-v data:/root/data \
+				-p 10000:27017 \
+				--name mongo1 \
+				--net mongo-network \
+				mongo mongod --replSet mongo-network
+9bd18b0a20a4a1537685d54c9f53ae239ec78db0d4981fad05f6db2e7ae2ec7a
+# secondary
+docker run -d \
+				-p 10001:27017 \
+				--name mongo2 \
+				--net mongo-network \
+				mongo mongod --replSet mongo-network
+b278a3f95bb8976d03f0365a608b2eade3cb3036b5603db97c72b89d429feaf7
+docker run -d \
+				-p 10002:27017 \
+				--name mongo3 \
+				--net mongo-network \
+				mongo mongod --replSet mongo-network
+a6203e526c36471de9eb3cd42566a7db7e2b0d77561ef1fd1d9b68198de7da2a
+# wait for DB to initialize
+sleep 3
+docker exec -it mongo1 mongo --eval 'var cfg = { "_id": "mongo-network", "protocolVersion": 1, "members": [ { "_id": 0, "host": "mongo1:27017" }, { "_id": 1, "host": "mongo2:27017" }, { "_id": 2, "host": "mongo3:27017" } ] }; rs.initiate(cfg, { force: true }); rs.reconfig(cfg, { force: true }); '
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("5b1b3214-c34c-435d-a46f-cba084891590") }
+MongoDB server version: 4.2.6
+{
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588194959, 1),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	},
+	"operationTime" : Timestamp(1588194959, 1)
+}
+sleep 1
+# set mongo1 to master
+docker exec -it mongo1 mongo --quiet --eval 'cfg = rs.conf(); cfg.members[0].priority = 1; cfg.members[1].priority = 0.5; cfg.members[2].priority = 0.5; rs.reconfig(cfg);'
+{
+	"operationTime" : Timestamp(1588194959, 1),
+	"ok" : 0,
+	"errmsg" : "replSetReconfig should only be run on PRIMARY, but my state is SECONDARY; use the \"force\" argument to override",
+	"code" : 10107,
+	"codeName" : "NotMaster",
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588194959, 1),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	}
+}
+docker exec -it mongo2 mongo --quiet --eval 'cfg = rs.conf(); cfg.members[0].priority = 1; cfg.members[1].priority = 0.5; cfg.members[2].priority = 0.5; rs.reconfig(cfg);'
+{
+	"operationTime" : Timestamp(1588194959, 1),
+	"ok" : 0,
+	"errmsg" : "replSetReconfig should only be run on PRIMARY, but my state is SECONDARY; use the \"force\" argument to override",
+	"code" : 10107,
+	"codeName" : "NotMaster",
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588194959, 1),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	}
+}
+docker exec -it mongo3 mongo --quiet --eval 'cfg = rs.conf(); cfg.members[0].priority = 1; cfg.members[1].priority = 0.5; cfg.members[2].priority = 0.5; rs.reconfig(cfg);'
+{
+	"operationTime" : Timestamp(1588194959, 1),
+	"ok" : 0,
+	"errmsg" : "replSetReconfig should only be run on PRIMARY, but my state is SECONDARY; use the \"force\" argument to override",
+	"code" : 10107,
+	"codeName" : "NotMaster",
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588194959, 1),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	}
+}
+sleep 10
+docker exec -it mongo1 mongo --eval 'db.isMaster();'
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("a78cc19d-0513-458c-bf7c-325d6f91cab6") }
+MongoDB server version: 4.2.6
+{
+	"hosts" : [
+		"mongo1:27017",
+		"mongo2:27017",
+		"mongo3:27017"
+	],
+	"setName" : "mongo-network",
+	"setVersion" : 54006,
+	"ismaster" : true,
+	"secondary" : false,
+	"primary" : "mongo1:27017",
+	"me" : "mongo1:27017",
+	"electionId" : ObjectId("7fffffff0000000000000001"),
+	"lastWrite" : {
+		"opTime" : {
+			"ts" : Timestamp(1588194971, 1),
+			"t" : NumberLong(1)
+		},
+		"lastWriteDate" : ISODate("2020-04-29T21:16:11Z"),
+		"majorityOpTime" : {
+			"ts" : Timestamp(1588194971, 1),
+			"t" : NumberLong(1)
+		},
+		"majorityWriteDate" : ISODate("2020-04-29T21:16:11Z")
+	},
+	"maxBsonObjectSize" : 16777216,
+	"maxMessageSizeBytes" : 48000000,
+	"maxWriteBatchSize" : 100000,
+	"localTime" : ISODate("2020-04-29T21:16:11.638Z"),
+	"logicalSessionTimeoutMinutes" : 30,
+	"connectionId" : 23,
+	"minWireVersion" : 0,
+	"maxWireVersion" : 8,
+	"readOnly" : false,
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588194971, 1),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	},
+	"operationTime" : Timestamp(1588194971, 1)
+}
+docker exec -it mongo2 mongo --eval 'db.isMaster();'
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("d8fa0bf6-00b9-4ced-b82b-5671ba7ad351") }
+MongoDB server version: 4.2.6
+{
+	"hosts" : [
+		"mongo1:27017",
+		"mongo2:27017",
+		"mongo3:27017"
+	],
+	"setName" : "mongo-network",
+	"setVersion" : 54006,
+	"ismaster" : false,
+	"secondary" : true,
+	"primary" : "mongo1:27017",
+	"me" : "mongo2:27017",
+	"lastWrite" : {
+		"opTime" : {
+			"ts" : Timestamp(1588194971, 1),
+			"t" : NumberLong(1)
+		},
+		"lastWriteDate" : ISODate("2020-04-29T21:16:11Z"),
+		"majorityOpTime" : {
+			"ts" : Timestamp(1588194971, 1),
+			"t" : NumberLong(1)
+		},
+		"majorityWriteDate" : ISODate("2020-04-29T21:16:11Z")
+	},
+	"maxBsonObjectSize" : 16777216,
+	"maxMessageSizeBytes" : 48000000,
+	"maxWriteBatchSize" : 100000,
+	"localTime" : ISODate("2020-04-29T21:16:11.840Z"),
+	"logicalSessionTimeoutMinutes" : 30,
+	"connectionId" : 15,
+	"minWireVersion" : 0,
+	"maxWireVersion" : 8,
+	"readOnly" : false,
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588194971, 1),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	},
+	"operationTime" : Timestamp(1588194971, 1)
+}
+docker exec -it mongo3 mongo --eval 'db.isMaster();'
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("85cc8a18-f728-49b7-85a5-620710a23173") }
+MongoDB server version: 4.2.6
+{
+	"hosts" : [
+		"mongo1:27017",
+		"mongo2:27017",
+		"mongo3:27017"
+	],
+	"setName" : "mongo-network",
+	"setVersion" : 54006,
+	"ismaster" : false,
+	"secondary" : true,
+	"primary" : "mongo1:27017",
+	"me" : "mongo3:27017",
+	"lastWrite" : {
+		"opTime" : {
+			"ts" : Timestamp(1588194971, 1),
+			"t" : NumberLong(1)
+		},
+		"lastWriteDate" : ISODate("2020-04-29T21:16:11Z"),
+		"majorityOpTime" : {
+			"ts" : Timestamp(1588194971, 1),
+			"t" : NumberLong(1)
+		},
+		"majorityWriteDate" : ISODate("2020-04-29T21:16:11Z")
+	},
+	"maxBsonObjectSize" : 16777216,
+	"maxMessageSizeBytes" : 48000000,
+	"maxWriteBatchSize" : 100000,
+	"localTime" : ISODate("2020-04-29T21:16:12.042Z"),
+	"logicalSessionTimeoutMinutes" : 30,
+	"connectionId" : 17,
+	"minWireVersion" : 0,
+	"maxWireVersion" : 8,
+	"readOnly" : false,
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588194971, 1),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	},
+	"operationTime" : Timestamp(1588194971, 1)
+}

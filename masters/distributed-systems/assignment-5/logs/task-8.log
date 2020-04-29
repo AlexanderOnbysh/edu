@@ -1,0 +1,38 @@
+docker exec -it mongo1 mongo --eval "db.coll.insert({command: 'command before delay'}, { writeConcern: { w: 1}});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("f1cae044-46ff-4545-99c9-2eaee8abacc5") }
+MongoDB server version: 4.2.6
+WriteResult({ "nInserted" : 1 })
+docker exec -it mongo1 mongo --quiet --eval 'cfg = rs.conf(); cfg.members[2].priority = 0; cfg.members[2].hidden=true; cfg.members[2].slaveDelay=100; rs.reconfig(cfg);'
+{
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1588195201, 1),
+		"signature" : {
+			"hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"keyId" : NumberLong(0)
+		}
+	},
+	"operationTime" : Timestamp(1588195201, 1)
+}
+docker exec -it mongo1 mongo --eval "db.coll.insert({command: 'command after delay'}, { writeConcern: { w: 1}});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("52dca225-d7e2-45c3-859f-b97e1640340a") }
+MongoDB server version: 4.2.6
+WriteResult({ "nInserted" : 1 })
+sleep 5
+docker exec -it mongo2 mongo --eval "rs.slaveOk(); db.coll.find({command : /delay/});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("6f5c65f4-1cd1-4475-8913-98a1bf23346b") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9ef80571c25b0f5916970"), "command" : "command before delay" }
+{ "_id" : ObjectId("5ea9ef819339ca8457367407"), "command" : "command after delay" }
+docker exec -it mongo3 mongo --eval "rs.slaveOk(); db.coll.find({command : /delay/});"
+MongoDB shell version v4.2.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("1405a963-db1e-4859-8d2a-09d8aa928c22") }
+MongoDB server version: 4.2.6
+{ "_id" : ObjectId("5ea9ef80571c25b0f5916970"), "command" : "command before delay" }
