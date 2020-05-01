@@ -1,0 +1,27 @@
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra \
+		-e "INSERT INTO space1.table1 (id, field) VALUES (0ab09bec-e68e-48d9-a5f8-97e6fb4c9b47, 'space1');"
+docker exec -it assignment-6_cassandra2_1 cqlsh --password cassandra --username cassandra \
+		-e "INSERT INTO space2.table2 (id, field) VALUES (1ab09bec-e68e-48d9-a5f8-97e6fb4c9b47, 'space2');"
+docker exec -it assignment-6_cassandra3_1 cqlsh --password cassandra --username cassandra \
+		-e "INSERT INTO space3.table3 (id, field) VALUES (2ab09bec-e68e-48d9-a5f8-97e6fb4c9b47, 'space3');"
+docker exec -it assignment-6_cassandra3_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space1.table1;"
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m0ab09bec-e68e-48d9-a5f8-97e6fb4c9b47[0m | [0;1;33mspace1[0m
+
+(1 rows)
+docker exec -it assignment-6_cassandra2_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space2.table2;"
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m1ab09bec-e68e-48d9-a5f8-97e6fb4c9b47[0m | [0;1;33mspace2[0m
+
+(1 rows)
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space3.table3;"
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m2ab09bec-e68e-48d9-a5f8-97e6fb4c9b47[0m | [0;1;33mspace3[0m
+
+(1 rows)

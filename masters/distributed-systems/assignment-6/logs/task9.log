@@ -1,0 +1,3 @@
+docker network disconnect assignment-6_default assignment-6_cassandra_1
+docker network disconnect assignment-6_default assignment-6_cassandra2_1
+docker network disconnect assignment-6_default assignment-6_cassandra3_1

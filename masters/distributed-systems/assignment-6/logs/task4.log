@@ -1,0 +1,75 @@
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra \
+		-e "CREATE TABLE space1.table1 (id UUID, field text, PRIMARY KEY(id, field));"
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra \
+		-e "DESCRIBE space1.table1;"
+
+CREATE TABLE space1.table1 (
+    id uuid,
+    field text,
+    PRIMARY KEY (id, field)
+) WITH CLUSTERING ORDER BY (field ASC)
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99PERCENTILE';
+
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra \
+		-e "CREATE TABLE space2.table2 (id UUID, field text, PRIMARY KEY(id, field));"
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra \
+		-e "DESCRIBE space2.table2;"
+
+CREATE TABLE space2.table2 (
+    id uuid,
+    field text,
+    PRIMARY KEY (id, field)
+) WITH CLUSTERING ORDER BY (field ASC)
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99PERCENTILE';
+
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra \
+		-e "CREATE TABLE space3.table3 (id UUID, field text, PRIMARY KEY(id, field));"
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra \
+		-e "DESCRIBE space3.table3;"
+
+CREATE TABLE space3.table3 (
+    id uuid,
+    field text,
+    PRIMARY KEY (id, field)
+) WITH CLUSTERING ORDER BY (field ASC)
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99PERCENTILE';
+

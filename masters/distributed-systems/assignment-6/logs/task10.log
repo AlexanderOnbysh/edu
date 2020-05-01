@@ -1,0 +1,24 @@
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space3.table3 (id, field) VALUES (now(), 'node 1');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space3.table3;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m2d9eee60-8bea-11ea-999e-f9bd6c778a7c[0m | [0;1;33mnode 1[0m
+
+(1 rows)
+docker exec -it assignment-6_cassandra2_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space3.table3 (id, field) VALUES (now(), 'node 2');"; exit 0
+docker exec -it assignment-6_cassandra2_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space3.table3;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m2d9eee60-8bea-11ea-999e-f9bd6c778a7c[0m | [0;1;33mnode 2[0m
+
+(1 rows)
+docker exec -it assignment-6_cassandra3_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space3.table3 (id, field) VALUES (now(), 'node 3');"; exit 0
+docker exec -it assignment-6_cassandra3_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space3.table3;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m2d9eee60-8bea-11ea-999e-f9bd6c778a7c[0m | [0;1;33mnode 3[0m
+
+(1 rows)

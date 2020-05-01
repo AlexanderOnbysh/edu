@@ -1,0 +1,148 @@
+docker network disconnect assignment-6_default assignment-6_cassandra3_1
+echo 'CONSISTENCY ONE'
+CONSISTENCY ONE
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "CONSISTENCY ONE;"
+Consistency level set to ONE.
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space1.table1 (id, field) VALUES (now(), 'space1');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space1.table1;"; exit 0
+[0;1;31m<stdin>:1:ReadTimeout: Error from server: code=1200 [Coordinator node timed out waiting for replica nodes' responses] message="Operation timed out - received only 0 responses." info={'received_responses': 0, 'required_responses': 1, 'consistency': 'ONE'}[0m
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space2.table2 (id, field) VALUES (now(), 'space2');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space2.table2;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32mc4fcd940-8be8-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m0ebd76c0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+
+(2 rows)
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space3.table3 (id, field) VALUES (now(), 'space3');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space3.table3;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m0fff1e80-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32mc631afc0-8be8-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+
+(2 rows)
+echo 'CONSISTENCY TWO'
+CONSISTENCY TWO
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "CONSISTENCY TWO;"
+Consistency level set to TWO.
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space1.table1 (id, field) VALUES (now(), 'space1');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space1.table1;"; exit 0
+[0;1;31m<stdin>:1:NoHostAvailable: [0m
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space2.table2 (id, field) VALUES (now(), 'space2');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space2.table2;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m149129c0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32mc4fcd940-8be8-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m0ebd76c0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+
+(3 rows)
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space3.table3 (id, field) VALUES (now(), 'space3');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space3.table3;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m15a61c30-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32m0fff1e80-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32mc631afc0-8be8-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+
+(3 rows)
+echo 'CONSISTENCY QUORUM'
+CONSISTENCY QUORUM
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "CONSISTENCY QUORUM;"
+Consistency level set to QUORUM.
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space1.table1 (id, field) VALUES (now(), 'space1');"; exit 0
+[0;1;31m<stdin>:1:NoHostAvailable: [0m
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space1.table1;"; exit 0
+[0;1;31m<stdin>:1:NoHostAvailable: [0m
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space2.table2 (id, field) VALUES (now(), 'space2');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space2.table2;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m1818a2d0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m149129c0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32mc4fcd940-8be8-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m0ebd76c0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+
+(4 rows)
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space3.table3 (id, field) VALUES (now(), 'space3');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space3.table3;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m15a61c30-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32m0fff1e80-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32m195b34f0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32mc631afc0-8be8-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+
+(4 rows)
+echo 'CONSISTENCY SERIAL'
+CONSISTENCY SERIAL
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "CONSISTENCY SERIAL;"
+Consistency level set to SERIAL.
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space1.table1 (id, field) VALUES (now(), 'space1');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space1.table1;"; exit 0
+[0;1;31m<stdin>:1:NoHostAvailable: [0m
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space2.table2 (id, field) VALUES (now(), 'space2');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space2.table2;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m1818a2d0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m149129c0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32mc4fcd940-8be8-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m0ebd76c0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m1be00b10-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+
+(5 rows)
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space3.table3 (id, field) VALUES (now(), 'space3');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space3.table3;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m1ce67e90-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32m15a61c30-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32m0fff1e80-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32m195b34f0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32mc631afc0-8be8-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+
+(5 rows)
+echo 'CONSISTENCY ALL'
+CONSISTENCY ALL
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "CONSISTENCY ALL;"
+Consistency level set to ALL.
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space1.table1 (id, field) VALUES (now(), 'space1');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space1.table1;"; exit 0
+[0;1;31m<stdin>:1:NoHostAvailable: [0m
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space2.table2 (id, field) VALUES (now(), 'space2');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space2.table2;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m1f5fbbf0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m1818a2d0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m149129c0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32mc4fcd940-8be8-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m0ebd76c0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+ [0;1;32m1be00b10-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace2[0m
+
+(6 rows)
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "INSERT INTO space3.table3 (id, field) VALUES (now(), 'space3');"; exit 0
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space3.table3;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m1ce67e90-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32m15a61c30-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32m0fff1e80-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32m2059fa70-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32m195b34f0-8be9-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+ [0;1;32mc631afc0-8be8-11ea-90d4-21ac783c0b68[0m | [0;1;33mspace3[0m
+
+(6 rows)
+docker network connect assignment-6_default assignment-6_cassandra3_1

@@ -1,0 +1,10 @@
+docker exec -it assignment-6_cassandra_1 bash -c "nodetool status"
+Datacenter: datacenter1
+=======================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address     Load       Tokens       Owns (effective)  Host ID                               Rack
+UN  172.19.0.3  170.12 KiB  256          66.2%             eec21f51-3efc-47f9-80a6-5379c609e7a2  rack1
+UN  172.19.0.2  237.35 KiB  256          65.1%             5be21ff2-6e17-401c-9c5a-98359fbb3bf1  rack1
+UN  172.19.0.4  229.33 KiB  256          68.7%             17a578c0-cd4c-4ff3-a642-b4d1d79ee2d7  rack1
+

@@ -1,0 +1,9 @@
+docker exec -it assignment-6_cassandra_1 bash -c "nodetool getendpoints space1 table1 '0ab09bec-e68e-48d9-a5f8-97e6fb4c9b47'"
+172.22.0.3
+docker exec -it assignment-6_cassandra_1 bash -c "nodetool getendpoints space2 table2 '1ab09bec-e68e-48d9-a5f8-97e6fb4c9b47'"
+172.22.0.4
+172.22.0.3
+docker exec -it assignment-6_cassandra_1 bash -c "nodetool getendpoints space3 table3 '2ab09bec-e68e-48d9-a5f8-97e6fb4c9b47'"
+172.22.0.4
+172.22.0.3
+172.22.0.2

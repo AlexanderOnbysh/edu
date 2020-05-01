@@ -1,0 +1,11 @@
+docker network connect assignment-6_default assignment-6_cassandra_1
+docker network connect assignment-6_default assignment-6_cassandra2_1
+docker network connect assignment-6_default assignment-6_cassandra3_1
+sleep 30
+docker exec -it assignment-6_cassandra_1 cqlsh --password cassandra --username cassandra -e "SELECT * FROM space3.table3;"; exit 0
+
+ [0;1;31mid[0m                                   | [0;1;36mfield[0m
+--------------------------------------+--------
+ [0;1;32m2d9eee60-8bea-11ea-999e-f9bd6c778a7c[0m | [0;1;33mnode 3[0m
+
+(1 rows)
