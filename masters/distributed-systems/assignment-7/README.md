@@ -1,4 +1,4 @@
-# Assignment 2: MongoDB
+# Assignment 7: MongoDB Map-Reduce
 
 ## Queries
 ```
