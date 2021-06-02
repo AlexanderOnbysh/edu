@@ -8,5 +8,5 @@ multidict==3.3.2
 requests==2.18.4
 spotipy==2.4.4
 tqdm==4.19.5
-urllib3==1.22
+urllib3==1.26.5
 yarl==0.16.0
